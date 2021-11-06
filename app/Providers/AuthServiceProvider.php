@@ -30,7 +30,7 @@ class AuthServiceProvider extends ServiceProvider
         //
         ResetPassword::createUrlUsing(function ($user, string $token) {
             Log::debug($user);
-            return 'https://wycoin.fr/reset-password?token=' . $token;
+            return 'https://wycoin.fr/reset-password?token=' . $token . '&email=' . $user->email;
         });
     }
 }
