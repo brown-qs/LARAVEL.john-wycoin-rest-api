@@ -6,6 +6,8 @@ use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvid
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Auth\Notifications\ResetPassword;
 
+use Illuminate\Support\Facades\Log;
+
 class AuthServiceProvider extends ServiceProvider
 {
     /**
@@ -25,9 +27,9 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-
         //
         ResetPassword::createUrlUsing(function ($user, string $token) {
+            Log::debug($user);
             return 'https://wycoin.fr/reset-password?token=' . $token;
         });
     }
