@@ -40,7 +40,7 @@ class Controller extends BaseController
         ];
 
         if (!empty($errorMessages)) {
-            $response['data'] = $errorMessages;
+            $response['errors'] = $errorMessages;
         }
 
         return response()->json($response, 200);

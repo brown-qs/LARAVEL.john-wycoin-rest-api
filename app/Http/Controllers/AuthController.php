@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Validator;
-use App\Models\User;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Support\Facades\Mail;
+
+use Validator;
+use App\Models\User;
+use App\Mail\EmailVerificationCode;
 
 class AuthController extends Controller
 {
@@ -30,9 +33,11 @@ class AuthController extends Controller
   public function signup(Request $request)
   {
     $validator = Validator::make($request->all(), [
-      'name' => 'required',
+      'first_name' => 'required',
+      'last_name' => 'required',
+      'username' => 'required',
       'email' => 'required|email',
-      'password' => 'required',
+      'password' => 'required|min:8',
       'confirm_password' => 'required|same:password',
     ]);
 
@@ -42,9 +47,15 @@ class AuthController extends Controller
 
     $input = $request->all();
     $input['password'] = bcrypt($input['password']);
+    $input['email_verification_code'] = mt_rand(1000, 9999);
+
     $user = User::create($input);
+
+    Mail::to($user->email)->send(new EmailVerificationCode($user->email_verification_code));
+
     $success['token'] =  $user->createToken('MyAuthApp')->plainTextToken;
-    $success['name'] =  $user->name;
+    $success['username'] =  $user->username;
+
 
     return $this->sendResponse($success, 'User created successfully.');
   }
@@ -59,7 +70,7 @@ class AuthController extends Controller
 
     return $status === Password::RESET_LINK_SENT
       ? $this->sendResponse(['status' => __($status)])
-      : $this->sendError("Error", ['email' => __($status)]);
+      : $this->sendError("Error", ['email' => [__($status)]]);
   }
 
   public function resetPassword(Request $request)
@@ -85,6 +96,6 @@ class AuthController extends Controller
 
     return $status === Password::PASSWORD_RESET
       ? $this->sendResponse(['status' => __($status)])
-      : $this->sendError("Error", ['email' => __($status)]);
+      : $this->sendError("Error", ['email' => [__($status)]]);
   }
 }
