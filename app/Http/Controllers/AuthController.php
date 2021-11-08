@@ -19,14 +19,22 @@ class AuthController extends Controller
 
   public function signin(Request $request)
   {
-    if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+    if (Auth::attempt(['username' => $request->username, 'password' => $request->password])) {
       $authUser = Auth::user();
+
+      if (!$authUser->hasVerifiedEmail()) {
+        return $this->sendError('unverified-email', ['error' => ['Email is not verified']], ['email' => $authUser->email]);
+      }
+
       $success['token'] =  $authUser->createToken('MyAuthApp')->plainTextToken;
-      $success['name'] =  $authUser->name;
+      $success['username'] =  $authUser->username;
+      $success['first_name'] = $authUser->first_name;
+      $success['last_name'] = $authUser->last_name;
+      $success['email'] = $authUser->email;
 
       return $this->sendResponse($success, 'User signed in');
     } else {
-      return $this->sendError('Unauthorised.', ['error' => 'Unauthorised']);
+      return $this->sendError('unauthorized', ['error' => ['Wrong Credentials']]);
     }
   }
 
@@ -56,8 +64,32 @@ class AuthController extends Controller
     $success['token'] =  $user->createToken('MyAuthApp')->plainTextToken;
     $success['username'] =  $user->username;
 
-
     return $this->sendResponse($success, 'User created successfully.');
+  }
+
+  public function verifyEmail(Request $request)
+  {
+    $request->validate([
+      'email' => 'required|email',
+      'code' => 'required'
+    ]);
+
+    $user = User::where('email', $request->email)->first();
+    if ($user == null) {
+      return $this->sendError("Error", ['email' => ['Email not found.']]);
+    }
+    if ($request->code != $user->email_verification_code) {
+      return $this->sendError("Error", ['code' => ['Verification Code is incorrect.']]);
+    }
+    $user->markEmailAsVerified();
+
+    $success['token'] =  $user->createToken('MyAuthApp')->plainTextToken;
+    $success['username'] =  $user->username;
+    $success['first_name'] = $user->first_name;
+    $success['last_name'] = $user->last_name;
+    $success['email'] = $user->email;
+
+    return $this->sendResponse($success, 'Email is Verified successfully.');
   }
 
   public function forgotPassword(Request $request)

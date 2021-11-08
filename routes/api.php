@@ -18,11 +18,11 @@ use App\Http\Controllers\AuthController;
 Route::post('login', [AuthController::class, 'signin']);
 Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
 Route::post('reset-password', [AuthController::class, 'resetPassword']);
-
+Route::post('verify-email', [AuthController::class, 'verifyEmail']);
 Route::post('register', [AuthController::class, 'signup']);
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('user', function ($request) {
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::post('hello', function (Request $request) {
         return $request->user();
     });
 });
