@@ -30,6 +30,7 @@ class AuthController extends Controller
       $success['username'] =  $authUser->username;
       $success['first_name'] = $authUser->first_name;
       $success['last_name'] = $authUser->last_name;
+      $success['gender'] = $authUser->gender;
       $success['email'] = $authUser->email;
 
       return $this->sendResponse($success, 'User signed in');
@@ -43,6 +44,7 @@ class AuthController extends Controller
     $validator = Validator::make($request->all(), [
       'first_name' => 'required',
       'last_name' => 'required',
+      'gender' => 'required',
       'username' => 'required',
       'email' => 'required|email',
       'password' => 'required|min:8',
