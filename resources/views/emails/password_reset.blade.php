@@ -2,7 +2,7 @@
     {{-- Header --}}
     @slot('header')
         @component('mail::header', ['url' => config('app.url')])
-            <img src="{{ asset('img/logo.png') }}">
+            <img src="{{ asset('img/logo.png') }}" width="200">
         @endcomponent
     @endslot
 
@@ -13,9 +13,9 @@
     @lang("You are receiving this email because we received a password reset request for your account.")
 
     {{-- Action Button --}}
-    @component('mail::button', ['url' => $url, 'color' => 'primary'])
+    {{-- @component('mail::button', ['url' => $url, 'color' => 'primary'])
         @lang("Reset Password")
-    @endcomponent
+    @endcomponent --}}
 
     {{-- Outro Lines --}}
     @lang("This link will expire in 60 minutes.")
