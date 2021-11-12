@@ -2,24 +2,24 @@
     {{-- Header --}}
     @slot('header')
         @component('mail::header', ['url' => config('app.url')])
-            <img src="{{ asset('img/logo.png') }}" class="logo">
+            <img src="{{ asset('img/logo.png') }}">
         @endcomponent
     @endslot
 
     {{-- Greeting --}}
-    # @lang('Welcome!')
+    @lang('Welcome!')
 
     {{-- Intro Lines --}}
-    # @lang("You are receiving this email because we received a password reset request for your account.")
+    @lang("You are receiving this email because we received a password reset request for your account.")
 
     {{-- Action Button --}}
     @component('mail::button', ['url' => $url, 'color' => 'primary'])
-        # @lang("Reset Password")
+        @lang("Reset Password")
     @endcomponent
 
     {{-- Outro Lines --}}
-    # @lang("This link will expire in 60 minutes.")
-    # @lang("If you did not request a password reset, no further action is required.")
+    @lang("This link will expire in 60 minutes.")
+    @lang("If you did not request a password reset, no further action is required.")
 
     @component('mail::subcopy')
         @lang(
@@ -34,7 +34,7 @@
     {{-- Footer --}}
     @slot('footer')
         @component('mail::footer')
-            @lang("This message has been sent automatically. Please do not reply.")
+            @lang("This message has been sent automatically. Please do not reply.") <br/>
             © {{ date('Y') }} {{ config('app.name') }}
         @endcomponent
     @endslot
