@@ -89,6 +89,7 @@ class AuthController extends Controller
     $success['username'] =  $user->username;
     $success['first_name'] = $user->first_name;
     $success['last_name'] = $user->last_name;
+    $success['gender'] = $user->gender;
     $success['email'] = $user->email;
 
     return $this->sendResponse($success, 'Email is Verified successfully.');
@@ -132,4 +133,5 @@ class AuthController extends Controller
       ? $this->sendResponse(['status' => __($status)])
       : $this->sendError("Error", ['email' => [__($status)]]);
   }
+
 }

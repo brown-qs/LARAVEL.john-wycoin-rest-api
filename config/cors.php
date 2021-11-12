@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['https://wycoin.fr', 'https://www.wycoin.fr'],
+    'allowed_origins' => ['https://wycoin.fr', 'https://www.wycoin.fr', 'http://localhost:3000'],
 
     'allowed_origins_patterns' => [],
 

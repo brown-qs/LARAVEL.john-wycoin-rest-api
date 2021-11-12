@@ -5,8 +5,8 @@ namespace App\Providers;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Auth\Notifications\ResetPassword;
-
 use Illuminate\Support\Facades\Log;
+use Illuminate\Notifications\Messages\MailMessage;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -28,8 +28,11 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
         //
-        ResetPassword::createUrlUsing(function ($user, string $token) {
-            return 'https://wycoin.fr/reset-password/' . $user->email . '/' . $token;
+        ResetPassword::toMailUsing(function ($notifiable, string $token) {
+            $url = 'https://wycoin.fr/reset-password/' . $notifiable->getEmailForPasswordReset() . '/' . $token;
+            return (new MailMessage)->view('emails.password_reset', [
+                'url' => $url
+            ]);
         });
     }
 }
