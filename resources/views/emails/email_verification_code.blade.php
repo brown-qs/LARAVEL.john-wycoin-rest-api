@@ -12,7 +12,7 @@
 
 @lang("Here's your verification code.")
 
-<span style="border-radius: 0.5rem; background-color:#2d3748; color: white; padding: 0.2rem 1rem; font-size: 2em;">{{ $code }}</span>
+<p><span style="border-radius: 0.5rem; background-color:#2d3748; color: white; padding: 0.2rem 1rem; font-size: 2em;">{{ $code }}</span></p>
 
 <p style="color:red">@lang("This link will expire in 60 minutes.")</p>
 
