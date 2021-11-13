@@ -33,10 +33,10 @@
 'actionText' => "Reset Password",
 ]
 )
+<span class="break-all">{{ $url }}</span>
 </td>
 </tr>
 </table>
-<span class="break-all">[{{ $url }}]({{ $url }})</span>
 @endcomponent
 
 {{-- Footer --}}
