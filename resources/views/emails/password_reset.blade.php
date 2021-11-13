@@ -18,14 +18,14 @@
 @endcomponent
 
 {{-- Outro Lines --}}
-<p class="text-danger">@lang("This link will expire in 60 minutes.")</p>
+<p style="color:red">@lang("This link will expire in 60 minutes.")</p>
 @lang("If you did not request a password reset, no further action is required.")
 
 @component('mail::subcopy')
 @lang("WyCoin Team")
 <table class="wrapper" width="100%" cellpadding="0" cellspacing="0" role="presentation">
 <tr>
-<td>
+<td style="padding: 4rem">
 @lang(
 "If you're having trouble clicking the \":actionText\" button, copy and paste the URL below\n".
 'into your web browser:',
@@ -42,7 +42,7 @@
 {{-- Footer --}}
 @slot('footer')
 @component('mail::footer')
-@lang("This message has been sent automatically. Please do not reply.") <br/>
+<p>@lang("This message has been sent automatically. Please do not reply.")</p>
 © {{ date('Y') }} {{ config('app.name') }}
 @endcomponent
 @endslot
