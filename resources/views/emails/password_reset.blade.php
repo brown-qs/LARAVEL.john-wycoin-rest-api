@@ -7,7 +7,7 @@
 @endslot
 
 {{-- Greeting --}}
-@lang('Hello, :name', ['name' => "James"])
+@lang('Hello, :name', ['name' => $last_name])
 
 {{-- Intro Lines --}}
 @lang("You are receiving this email because we received a password reset request for your account.")

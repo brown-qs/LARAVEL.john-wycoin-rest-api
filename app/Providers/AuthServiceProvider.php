@@ -31,7 +31,8 @@ class AuthServiceProvider extends ServiceProvider
         ResetPassword::toMailUsing(function ($notifiable, string $token) {
             $url = 'https://wycoin.fr/reset-password/' . $notifiable->getEmailForPasswordReset() . '/' . $token;
             return (new MailMessage)->markdown('emails.password_reset', [
-                'url' => $url
+                'url' => $url,
+                'last_name' => $notifiable->last_name,
             ])->subject(__("Reset Your Password"));
         });
     }
