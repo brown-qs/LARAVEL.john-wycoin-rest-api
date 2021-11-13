@@ -2,12 +2,12 @@
 {{-- Header --}}
 @slot('header')
 @component('mail::header', ['url' => config('app.url')])
-<img src="{{ asset('img/logo.png') }}" width="200">
+<img src="{{ asset('img/app-logo.png') }}" width="200">
 @endcomponent
 @endslot
 
 {{-- Greeting --}}
-@lang('Welcome!')
+@lang('Hello, :name', ['name' => "James"])
 
 {{-- Intro Lines --}}
 @lang("You are receiving this email because we received a password reset request for your account.")
@@ -26,13 +26,7 @@
 <table class="wrapper" width="100%" cellpadding="0" cellspacing="0" role="presentation">
 <tr>
 <td style="padding: 1rem">
-@lang(
-"If you're having trouble clicking the \":actionText\" button, copy and paste the URL below\n".
-'into your web browser:',
-[
-'actionText' => "Reset Password",
-]
-)
+@lang("If you're having trouble clicking the 'Reset Password' button, copy and paste the URL below into your web browser:")
 <span class="break-all">{{ $url }}</span>
 </td>
 </tr>

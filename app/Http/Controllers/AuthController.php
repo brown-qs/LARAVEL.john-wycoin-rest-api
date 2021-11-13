@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\App;
 
 use Validator;
 use App\Models\User;
@@ -98,6 +99,8 @@ class AuthController extends Controller
   public function forgotPassword(Request $request)
   {
     $request->validate(['email' => 'required|email']);
+
+    App::setLocale('fr');
 
     $status = Password::sendResetLink(
       $request->only('email')
