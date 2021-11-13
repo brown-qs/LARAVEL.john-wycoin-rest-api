@@ -22,13 +22,20 @@
 @lang("If you did not request a password reset, no further action is required.")
 
 @component('mail::subcopy')
+@lang("WyCoin Team")
+<table class="wrapper" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+<tr>
+<td>
 @lang(
 "If you're having trouble clicking the \":actionText\" button, copy and paste the URL below\n".
 'into your web browser:',
 [
 'actionText' => "Reset Password",
 ]
-) 
+)
+</td>
+</tr>
+</table>
 <span class="break-all">[{{ $url }}]({{ $url }})</span>
 @endcomponent
 
