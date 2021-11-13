@@ -12,7 +12,13 @@
 
 @lang("Here's your verification code.")
 
-<h1> <span style="border-radius: 0.5rem; background-color:#2d3748; color: white;">{{ $code }}</span></h1>
+<span style="border-radius: 0.5rem; background-color:#2d3748; color: white; padding: 0.2rem 1rem; font-size: 2em;">{{ $code }}</span>
+
+<p style="color:red">@lang("This link will expire in 60 minutes.")</p>
+
+@component('mail::subcopy')
+@lang("WyCoin Team")
+@endcomponent
 
 {{-- Footer --}}
 @slot('footer')

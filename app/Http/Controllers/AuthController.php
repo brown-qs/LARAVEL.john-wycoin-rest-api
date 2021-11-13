@@ -62,6 +62,7 @@ class AuthController extends Controller
 
     $user = User::create($input);
 
+    App::setLocale('fr');
     Mail::to($user->email)->send(new EmailVerificationCode($user->email_verification_code));
 
     $success['token'] =  $user->createToken('MyAuthApp')->plainTextToken;

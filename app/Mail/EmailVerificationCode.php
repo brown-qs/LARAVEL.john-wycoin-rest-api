@@ -30,6 +30,6 @@ class EmailVerificationCode extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.email_verification_code');
+        return $this->markdown('emails.email_verification_code')->subject(__("Email Verification Code"));
     }
 }
