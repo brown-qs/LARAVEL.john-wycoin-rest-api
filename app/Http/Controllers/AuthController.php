@@ -94,7 +94,7 @@ class AuthController extends Controller
     $success['gender'] = $user->gender;
     $success['email'] = $user->email;
 
-    return $this->sendResponse($success, 'Email is Verified successfully.');
+    return $this->sendResponse($success, __('Email is Verified successfully.'));
   }
 
   public function forgotPassword(Request $request)
@@ -108,7 +108,7 @@ class AuthController extends Controller
     );
 
     return $status === Password::RESET_LINK_SENT
-      ? $this->sendResponse(['status' => __($status)])
+      ? $this->sendResponse(null, __($status))
       : $this->sendError("Error", ['email' => [__($status)]]);
   }
 
@@ -134,8 +134,7 @@ class AuthController extends Controller
     );
 
     return $status === Password::PASSWORD_RESET
-      ? $this->sendResponse(['status' => __($status)])
+      ? $this->sendResponse(null, __($status))
       : $this->sendError("Error", ['email' => [__($status)]]);
   }
-
 }

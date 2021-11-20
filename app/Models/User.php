@@ -45,4 +45,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Get the Exchanges for User
+     */
+    public function exchanges()
+    {
+        return $this->hasMany(UserExchange::class);
+    }
 }

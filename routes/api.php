@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ExchangeController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,6 +15,7 @@ use App\Http\Controllers\AuthController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+use Illuminate\Support\Facades\Auth;
 
 Route::post('login', [AuthController::class, 'signin']);
 Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
@@ -22,7 +24,7 @@ Route::post('verify-email', [AuthController::class, 'verifyEmail']);
 Route::post('register', [AuthController::class, 'signup']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::post('hello', function (Request $request) {
-        return $request->user();
-    });
+    Route::post('add-user-exchange', [ExchangeController::class, 'addUserExchange']);
+    Route::get('get-user-exchanges', [ExchangeController::class, 'getUserExchanges']);
+    Route::get('load-exchange-transactions/{id}', [ExchangeController::class, 'loadExchangeTransactions']);
 });
