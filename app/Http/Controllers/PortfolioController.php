@@ -92,7 +92,7 @@ class PortfolioController extends Controller
       "cbe15651c9f49ef21ad8d08d8343764a7b772e3859cf309a015e8c4bd428e770";
     $client_secret =
       "f61c22fd167213f43fd1d5cccaa3b7a29247c7622f607920a20450e90165b5ad";
-    $redirect_uri = "http://localhost:3000/coinbase-oauth-redirect";
+    $redirect_uri = env('FRONTEND_ORIGIN') . "/coinbase-oauth-redirect";
 
 
     $response = Http::post('https://api.coinbase.com/oauth/token', [
