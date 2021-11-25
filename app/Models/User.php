@@ -51,6 +51,6 @@ class User extends Authenticatable
      */
     public function exchanges()
     {
-        return $this->hasMany(UserExchange::class);
+        return $this->hasMany(Portfolio::class);
     }
 }

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class UserExchange extends Model
+class Portfolio extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -16,6 +16,7 @@ class UserExchange extends Model
         'title',
         'exchange',
         'metadata',
+        'api_id'
     ];
 
     /**

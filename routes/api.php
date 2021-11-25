@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ExchangeController;
+use App\Http\Controllers\PortfolioController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -24,7 +24,7 @@ Route::post('verify-email', [AuthController::class, 'verifyEmail']);
 Route::post('register', [AuthController::class, 'signup']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::post('add-user-exchange', [ExchangeController::class, 'addUserExchange']);
-    Route::get('get-user-exchanges', [ExchangeController::class, 'getUserExchanges']);
-    Route::get('load-exchange-transactions/{id}', [ExchangeController::class, 'loadExchangeTransactions']);
+    Route::post('add-portfolio', [PortfolioController::class, 'addPortfolio']);
+    Route::get('get-portfolios', [PortfolioController::class, 'getPortfolios']);
+    Route::get('load-portfolio-transactions/{id}', [PortfolioController::class, 'loadPortfolioTransactions']);
 });
