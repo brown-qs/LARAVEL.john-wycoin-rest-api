@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Portfolio;
+use App\Models\CustomTransaction;
 use Illuminate\Support\Facades\Http;
 
 class PortfolioController extends Controller
@@ -29,11 +30,6 @@ class PortfolioController extends Controller
 
       $connectionId = $connectionIds[$request->exchange];
 
-      $walletChainIds = [
-        '1' => 'rxxoewu0X8',
-        '56' => 'binacesmartchain',
-      ];
-
       $res = Http::withHeaders([
         'uuid' => '3697866f-3e7b-4bc7-8f19-8ff7760ecee6',
       ])->post("https://api.coin-stats.com/v5/portfolios/multi_wallet", [
@@ -42,7 +38,7 @@ class PortfolioController extends Controller
         "wallets" => [
           [
             'walletAdress' => $request->metadata['wallet_address'],
-            'connectionId' => $walletChainIds[$request->metadata['chain_id']],
+            'connectionId' => $request->metadata['chain_id'],
           ],
         ],
         "piVersion" => "v6"
@@ -111,6 +107,13 @@ class PortfolioController extends Controller
     $exchange = Portfolio::find($id);
     $result = [];
     if ($exchange->exchange === 'custom') {
+      $transactions = $exchange->custom_transactions;
+      foreach ($transactions as &$one) {
+        $one['current_value'] = $one['amount'];
+        $one['profit_lose_amount'] = 0;
+        $one['direction'] = 1;
+      }
+      $result = $transactions;
     } else {
       $response = Http::withHeaders([
         'uuid' => '3697866f-3e7b-4bc7-8f19-8ff7760ecee6',
@@ -119,10 +122,10 @@ class PortfolioController extends Controller
         'limit' => 100,
       ]);
       $response = $response->json()['transactions'];
-      // return $this->sendResponse($response, 'Exchanges loaded.');
+      return $this->sendResponse($response, 'Exchanges loaded.');
       foreach ($response as $i => $one) {
         $result[] = [
-          'index' => $i,
+          'id' => $i,
           'type' => $one['t'] ?? $one['tt'],
           'date' => $one['ad'],
           'coin' => $one['cs'],
@@ -141,5 +144,31 @@ class PortfolioController extends Controller
       }
     }
     return $this->sendResponse($result, 'Exchanges loaded.');
+  }
+
+  public function searchNetworks(Request $request)
+  {
+    $response = Http::get('https://api.coin-stats.com/v4/portfolios/support/binacesmartchain/coins?searchText=' . $request->search);
+    $response = $response->json();
+    $result = [];
+    foreach ($response as $one) {
+      if (isset($one['token'])) continue;
+      $result[] = $one;
+    }
+    return $this->sendResponse($result, 'Blockchains loaded.');
+  }
+
+  public function searchCoins(Request $request)
+  {
+    $response = Http::get('https://api.coin-stats.com/v4/coins?&limit=5&keyword=' . $request->search);
+    $response = $response->json();
+    return $this->sendResponse($response['coins'], 'Coins loaded.');
+  }
+
+  public function createCustomTransaction(Request $request)
+  {
+    $input = $request->all();
+    $transaction = CustomTransaction::create($input);
+    return $this->sendResponse($transaction, 'Transaction Created.');
   }
 }

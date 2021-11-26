@@ -4,20 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Portfolio extends Model
+class CustomTransaction extends Model
 {
     /**
      * The attributes that are mass assignable.
      *
      * @var string[]
      */
-    protected $fillable = [
-        'user_id',
-        'title',
-        'exchange',
-        'metadata',
-        'api_id'
-    ];
+    // protected $fillable = [
+    // ];
+    protected $guarded = ['id'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -35,10 +31,7 @@ class Portfolio extends Model
     protected $casts = [
     ];
 
-    public function user() {
-        return $this->belongsTo(User::class);
-    }
-    public function custom_transactions() {
-        return $this->hasMany(CustomTransaction::class);
+    public function portfolio() {
+        return $this->belongsTo(Portfolio::class);
     }
 }

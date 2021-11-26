@@ -29,4 +29,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('get-portfolios', [PortfolioController::class, 'getPortfolios']);
     Route::get('load-portfolio-transactions/{id}', [PortfolioController::class, 'loadPortfolioTransactions']);
     Route::post('coinbase-auth-token', [PortfolioController::class, 'coinbaseAuthToken']);
+    Route::get('search/coins', [PortfolioController::class, 'searchCoins']);
+    Route::get('search/networks', [PortfolioController::class, 'searchNetworks']);
+    Route::post('create-custom-transaction', [PortfolioController::class, 'createCustomTransaction']);
 });
