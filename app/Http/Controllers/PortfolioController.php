@@ -126,7 +126,6 @@ class PortfolioController extends Controller
         'limit' => 100,
       ]);
       $response = $response->json()['transactions'];
-      return $this->sendResponse($response, 'Exchanges loaded.');
       foreach ($response as $i => $one) {
         $result[] = [
           'id' => $i,
