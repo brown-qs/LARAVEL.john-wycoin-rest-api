@@ -62,10 +62,14 @@ class PortfolioController extends Controller
         "name" => "deniska",
         "additionalInfo" => $additionalInfo,
         "exchangeType" => $exchangeType,
-        "piVersion" => "v6"
+        "piVersion" => "v6",
+        'accounts' =>
+        [
+          "spot",
+          "margin_isolated"
+        ]
       ]);
       $res = $res->json();
-      return $this->sendResponse($res, 'Exchange created successfully.');
       $input['api_id'] = $res[0]['i'];
     }
     $exchange = Portfolio::create($input);
