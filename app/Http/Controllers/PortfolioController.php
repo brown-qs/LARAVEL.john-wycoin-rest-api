@@ -58,6 +58,7 @@ class PortfolioController extends Controller
       // ];
       $res = Http::withHeaders([
         'uuid' => '3697866f-3e7b-4bc7-8f19-8ff7760ecee6',
+        'token' => 'r:da7822d25e31c74a38bcbd53732e8b02'
       ])->post("https://api.coin-stats.com/v4/portfolios/exchange", [
         "name" => "deniska",
         "additionalInfo" => $additionalInfo,
@@ -121,6 +122,7 @@ class PortfolioController extends Controller
     } else {
       $response = Http::withHeaders([
         'uuid' => '3697866f-3e7b-4bc7-8f19-8ff7760ecee6',
+        'token' => 'r:da7822d25e31c74a38bcbd53732e8b02'
       ])->get('https://api.coin-stats.com/v6/transactions', [
         'portfolioId' => $exchange->api_id,
         'limit' => 100,
