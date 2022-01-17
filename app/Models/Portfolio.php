@@ -24,21 +24,26 @@ class Portfolio extends Model
      *
      * @var array
      */
-    protected $hidden = [
-    ];
+    protected $hidden = [];
 
     /**
      * The attributes that should be cast.
      *
      * @var array
      */
-    protected $casts = [
-    ];
+    protected $casts = [];
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
-    public function custom_transactions() {
+    public function custom_transactions()
+    {
         return $this->hasMany(CustomTransaction::class);
+    }
+    public function custom_coins()
+    {
+        return $this->custom_transactions()->groupBy(['coin', 'coin_label', 'coin_img'])
+            ->selectRaw('coin, coin_label, coin_img, sum(quantity) as quantity');
     }
 }

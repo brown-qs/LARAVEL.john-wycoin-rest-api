@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Http;
 
 class PortfolioController extends Controller
 {
+  private $uuid = "5f03fee7-efc9-431c-a85c-c388fc54b8c8";
+
   public function addPortfolio(Request $request)
   {
     $request->validate([
@@ -31,7 +33,7 @@ class PortfolioController extends Controller
       $connectionId = $connectionIds[$request->exchange];
 
       $res = Http::withHeaders([
-        'uuid' => '3697866f-3e7b-4bc7-8f19-8ff7760ecee6',
+        'uuid' => $this->uuid,
       ])->post("https://api.coin-stats.com/v5/portfolios/multi_wallet", [
         "name" => "deniska",
         "connectionId" => $connectionId,
@@ -57,8 +59,7 @@ class PortfolioController extends Controller
       //   "created_at" => 1637856964
       // ];
       $res = Http::withHeaders([
-        'uuid' => '3697866f-3e7b-4bc7-8f19-8ff7760ecee6',
-        'token' => 'r:da7822d25e31c74a38bcbd53732e8b02'
+        'uuid' => $this->uuid,
       ])->post("https://api.coin-stats.com/v4/portfolios/exchange", [
         "name" => "deniska",
         "additionalInfo" => $additionalInfo,
@@ -75,7 +76,10 @@ class PortfolioController extends Controller
     }
     $exchange = Portfolio::create($input);
 
-    return $this->sendResponse($exchange, 'Exchange created successfully.');
+    $response = $request->only('title', 'exchange', 'metadata');
+    $response['id'] = $exchange->id;
+
+    return $this->sendResponse($response, 'Exchange created successfully.');
   }
 
   public function getPortfolios()
@@ -121,8 +125,7 @@ class PortfolioController extends Controller
       $result = $transactions;
     } else {
       $response = Http::withHeaders([
-        'uuid' => '3697866f-3e7b-4bc7-8f19-8ff7760ecee6',
-        'token' => 'r:da7822d25e31c74a38bcbd53732e8b02'
+        'uuid' => $this->uuid,
       ])->get('https://api.coin-stats.com/v6/transactions', [
         'portfolioId' => $exchange->api_id,
         'limit' => 100,
@@ -151,6 +154,49 @@ class PortfolioController extends Controller
     return $this->sendResponse($result, 'Exchanges loaded.');
   }
 
+  public function loadPortfolioCoins($id)
+  {
+    $exchange = Portfolio::find($id);
+    $result = [];
+    if ($exchange->exchange === 'custom') {
+      $coins = $exchange->custom_coins;
+      $total = 0;
+      $profit = 0;
+      foreach ($coins as &$one) {
+        // $one['coin']
+        $one['price'] = '1';
+        $one['profit_lose_amount'] = 0;
+        $profit += $one['profit_lose_amount'];
+        $one['total'] = floatval($one['price']) * abs($one['quantity']);
+        $total += $one['total'];
+      }
+      $result = $coins;
+      return $this->sendResponse(['coins' => $result, 'total' => $total, 'profit' => $profit], 'Portfolio Infomation loaded.');
+    } else {
+      $response = Http::withHeaders([
+        'uuid' => $this->uuid,
+      ])->get('https://api.coin-stats.com/v6/portfolio_items', [
+        'portfolioId' => $exchange->api_id,
+        'coinExtraData' => true,
+      ]);
+      $response = $response->json();
+      $profit = 0;
+      foreach ($response['pi'] as $i => $one) {
+        $result[] = [
+          'coin' => $one['coin']['s'],
+          'coin_label' => $one['coin']['n'],
+          'coin_img' => $one['coin']['ic'] ?? url('/img/wycoin.png'),
+          'quantity' => abs($one['c']),
+          'price' => $one['p']['USD'],
+          'total' => floatval($one['p']['USD']) * abs($one['c']),
+          'profit_lose_amount' => $one['pt']['h24']['USD'],
+        ];
+        $profit += $one['pt']['h24']['USD'];
+      }
+      return $this->sendResponse(['coins' => $result, 'total' => $response['p']['USD'], 'profit' => $profit], 'Portfolio Infomation loaded.');
+    }
+  }
+
   public function searchNetworks(Request $request)
   {
     $response = Http::get('https://api.coin-stats.com/v4/portfolios/support/binacesmartchain/coins?searchText=' . $request->search);
@@ -174,6 +220,11 @@ class PortfolioController extends Controller
   {
     $input = $request->all();
     $transaction = CustomTransaction::create($input);
+
+    $transaction['current_value'] = $transaction['amount'];
+    $transaction['profit_lose_amount'] = 0;
+    $transaction['direction'] = 1;
+
     return $this->sendResponse($transaction, 'Transaction Created.');
   }
 }
