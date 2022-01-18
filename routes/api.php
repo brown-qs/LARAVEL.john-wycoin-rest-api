@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PortfolioController;
-
+use App\Models\Portfolio;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -33,4 +33,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('search/coins', [PortfolioController::class, 'searchCoins']);
     Route::get('search/networks', [PortfolioController::class, 'searchNetworks']);
     Route::post('create-custom-transaction', [PortfolioController::class, 'createCustomTransaction']);
+    Route::post('delete-portfolio', [PortfolioController::class, 'deletePortfolio']);
+    Route::post('update-portfolio', [PortfolioController::class, 'updatePortfolio']);
 });
