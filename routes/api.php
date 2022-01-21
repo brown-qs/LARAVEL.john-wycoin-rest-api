@@ -35,4 +35,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('create-custom-transaction', [PortfolioController::class, 'createCustomTransaction']);
     Route::post('delete-portfolio', [PortfolioController::class, 'deletePortfolio']);
     Route::post('update-portfolio', [PortfolioController::class, 'updatePortfolio']);
+    Route::post('transaction/delete', [PortfolioController::class, 'deleteTransactions']);
 });

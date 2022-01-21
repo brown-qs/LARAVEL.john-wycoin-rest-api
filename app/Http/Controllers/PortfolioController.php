@@ -214,6 +214,7 @@ class PortfolioController extends Controller
       ]);
       $response = $response->json();
       $profit = 0;
+      $total = $response['p']['USD'] ?? 0;
       if (isset($response['pi'])) {
         foreach ($response['pi'] as $one) {
           $result[] = [
@@ -228,7 +229,7 @@ class PortfolioController extends Controller
           $profit += $one['pt']['h24']['USD'];
         }
       }
-      return $this->sendResponse(['coins' => $result, 'total' => $response['p']['USD'], 'profit' => $profit], 'Portfolio Infomation loaded.');
+      return $this->sendResponse(['coins' => $result, 'total' => $total, 'profit' => $profit], 'Portfolio Infomation loaded.');
     }
   }
 
@@ -285,5 +286,17 @@ class PortfolioController extends Controller
     $transaction['direction'] = 1;
 
     return $this->sendResponse($transaction, 'Transaction Created.');
+  }
+
+  public function deleteTransactions(Request $request)
+  {
+    $request->validate([
+      'transactions'  => 'required',
+    ]);
+
+    foreach ($request->transactions as $tran) {
+      CustomTransaction::find($tran)->delete();
+    }
+    return $this->sendResponse(null, 'Transactions deleted.');
   }
 }
