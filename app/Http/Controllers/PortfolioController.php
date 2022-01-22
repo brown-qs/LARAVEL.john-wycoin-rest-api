@@ -252,6 +252,20 @@ class PortfolioController extends Controller
     return $this->sendResponse($response['coins'], 'Coins loaded.');
   }
 
+  public function searchPairs(Request $request)
+  {
+    $response = Http::get("https://api.coin-stats.com/v2/exchanges/pairs?coinId={$request->coin}&includePrices");
+    $response = $response->json();
+    $pair_list = [];
+    foreach ($response['pairs'] as $exchange) {
+      foreach ($exchange['pairs'] as $pair) {
+        $pair_list[] = $pair['coin'] . '-' . $pair['toCurrency'];
+      }
+    }
+    $pair_list = array_values(array_unique($pair_list));
+    return $this->sendResponse($pair_list, 'Pairs loaded.');
+  }
+
   public function getPrice($coin)
   {
     $response = Http::get('https://api.coinstats.app/public/v1/coins/' . $coin . '?currency=USD');
@@ -279,6 +293,12 @@ class PortfolioController extends Controller
   public function createCustomTransaction(Request $request)
   {
     $input = $request->all();
+    $input['date'] = date('Y-m-d', strtotime($input['date']));
+    $input['quantity'] = str_replace(",", ".", $input['quantity']);
+    // $input['amount'] = $input['amount'] + ' ' + explode('-', $input['pair_coin'])[1];
+    // $input['fees'] = $input['fees'] + ' ' + explode('-', $input['pair_coin'])[1];
+    // $input['purchase_price'] = $input['purchase_price'] + ' ' + explode('-', $input['pair_coin'])[1];
+
     $transaction = CustomTransaction::create($input);
 
     $transaction['current_value'] = $this->getPrice($input['coin']) * $input['quantity'];
@@ -286,6 +306,24 @@ class PortfolioController extends Controller
     $transaction['direction'] = 1;
 
     return $this->sendResponse($transaction, 'Transaction Created.');
+  }
+  public function updateCustomTransaction(Request $request)
+  {
+    $input = $request->all();
+    $input['date'] = date('Y-m-d', strtotime($input['date']));
+    $input['quantity'] = str_replace(",", ".", $input['quantity']);
+    // $input['amount'] = $input['amount'] + ' ' + explode('-', $input['pair_coin'])[1];
+    // $input['fees'] = $input['fees'] + ' ' + explode('-', $input['pair_coin'])[1];
+    // $input['purchase_price'] = $input['purchase_price'] + ' ' + explode('-', $input['pair_coin'])[1];
+
+    CustomTransaction::find($input['id'])->update($input);
+    $transaction = CustomTransaction::find($input['id'])->first();
+
+    $transaction['current_value'] = $this->getPrice($input['coin']) * $input['quantity'];
+    $transaction['profit_lose_amount'] = $this->get24HProfit($input['coin']);
+    $transaction['direction'] = 1;
+
+    return $this->sendResponse($transaction, 'Transaction Updated.');
   }
 
   public function deleteTransactions(Request $request)
