@@ -247,7 +247,7 @@ class PortfolioController extends Controller
 
   public function searchCoins(Request $request)
   {
-    $response = Http::get('https://api.coin-stats.com/v4/coins?&limit=5&keyword=' . $request->search);
+    $response = Http::get('https://api.coin-stats.com/v4/coins?&keyword=' . $request->search);
     $response = $response->json();
     return $this->sendResponse($response['coins'], 'Coins loaded.');
   }
